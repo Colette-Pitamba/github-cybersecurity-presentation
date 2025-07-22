@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+	<html lang="en">
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>GitHub for Cybersecurity Beginners</title>
+
+		<style>
+			* {
+				margin: 0;
+				padding: 0;
+				box-sizing: border-box;
+			}
+
+			body {
+				font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+				background: linear-gradient(135deg, #0f1419 0%, #1a2332 100%);
+				color: #ffffff;
+				overflow: hidden;
+			}
+
+			.presentation-container {
+				height: 100vh;
+				display: flex;
+				flex-direction: column;
+			}
+
+			.slide {
+				display: none;
+				padding: 60px;
+				height: 100vh;
+				flex-direction: column;
+				justify-content: center;
+				align-items: center;
+				text-align: center;
+				opacity: 0;
+				transition: opacity 0.5s ease-in-out;
+			}
+
+			.slide.active {
+				display: flex;
+				opacity: 1;
+			}
+
+			.slide h1 {
+				font-size: 3.5rem;
+				margin-bottom: 30px;
+				background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+				-webkit-background-clip: text;
+				-webkit-text-fill-color: transparent;
+				background-clip: text;
+			}
+
+			.slide h2 {
+				font-size: 2.5rem;
+				margin-bottom: 25px;
+				color: #4ecdc4;
+			}
+
+			.slide h3 {
+				font-size: 2rem;
+				margin-bottom: 20px;
+				color: #ff6b6b;
+			}
+
+			.slide p, .slide li {
+				font-size: 1.3rem;
+				line-height: 1.6;
+				margin-bottom: 15px;
+				max-width: 800px;
+			}
+
+			.slide ul {
+				text-align: left;
+				max-width: 800px;
+			}
+
+			.slide li {
+				margin-bottom: 12px;
+				list-style-type: none;
+				position: relative;
+				padding-left: 25px;
+			}
+
+			.slide li:before {
+				content: "▶";
+				position: absolute;
+				left: 0;
+				color: #4ecdc4;
+			}
+
+			.navigation {
+				position: fixed;
+				bottom: 30px;
+				left: 50%;
+				transform: translateX(-50%);
+				display: flex;
+				gap: 15px;
+				z-index: 1000;
+			}
+
+			.nav-btn {
+				background: rgba(78, 205, 196, 0.2);
+				border: 2px solid #4ecdc4;
+				color: #4ecdc4;
+				padding: 12px 24px;
+				border-radius: 25px;
+				cursor: pointer;
+				font-size: 1rem;
+				transition: all 0.3s ease;
+			}
+
+			.nav-btn:hover {
+				background: #4ecdc4;
+				color: #0f1419;
+				transform: translateY(-2px);
+			}
+
+			.nav-btn:disabled {
+				opacity: 0.5;
+				cursor: not-allowed;
+			}
+
+			.slide-counter {
+				position: fixed;
+				top: 30px;
+				right: 30px;
+				background: rgba(255, 255, 255, 0.1);
+				padding: 10px 20px;
+				border-radius: 20px;
+				font-size: 1rem;
+			}
+
+			.github-logo {
+				font-size: 4rem;
+				margin-bottom: 20px;
+			}
+
+			.project-grid {
+				display: grid;
+				grid-template-columns: repeat(2, 1fr);
+				gap: 20px;
+				max-width: 900px;
+				width: 100%;
+			}
+
+			.project-card {
+				background: rgba(255, 255, 255, 0.1);
+				padding: 20px;
+				border-radius: 15px;
+				border: 1px solid #4ecdc4;
+			}
+
+			.project-card h4 {
+				color: #ff6b6b;
+				margin-bottom: 10px;
+				font-size: 1.2rem;
+			}
+
+			.highlight {
+				background: rgba(255, 107, 107, 0.2);
+				padding: 2px 8px;
+				border-radius: 5px;
+				color: #ff6b6b;
+			}
+
+			.step-grid {
+				display: grid;
+				grid-template-columns: repeat(2, 1fr);
+				gap: 20px;
+				max-width: 900px;
+				width: 100%;
+			}
+
+			.step-card {
+				background: rgba(78, 205, 196, 0.1);
+				padding: 20px;
+				border-radius: 15px;
+				border: 1px solid #4ecdc4;
+				display: flex;
+				align-items: center;
+				gap: 15px;
+			}
+
+			.step-number {
+				background: #4ecdc4;
+				color: #0f1419;
+				width: 40px;
+				height: 40px;
+				border-radius: 50%;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				font-weight: bold;
+				font-size: 1.2rem;
+				flex-shrink: 0;
+			}
+
+			.resources-grid {
+				display: grid;
+				grid-template-columns: repeat(2, 1fr);
+				gap: 30px;
+				max-width: 1000px;
+				width: 100%;
+				margin-bottom: 20px;
+			}
+
+			.resource-section {
+				background: rgba(255, 255, 255, 0.05);
+				padding: 25px;
+				border-radius: 15px;
+				border: 1px solid rgba(78, 205, 196, 0.3);
+			}
+
+			.resource-section h3 {
+				margin-bottom: 15px;
+				font-size: 1.3rem;
+			}
+
+			.resource-links {
+				list-style: none;
+				padding: 0;
+			}
+
+			.resource-links li {
+				margin-bottom: 8px;
+				padding-left: 0;
+				padding-left: 24px;
+			}
+
+			.resource-links li:before {
+				content: "🔗";
+				margin-right: 8px;
+			}
+
+			.resource-links a {
+				color: #4ecdc4;
+				text-decoration: none;
+				transition: color 0.3s ease;
+				font-size: 1rem;
+			}
+
+			.resource-links a:hover {
+				color: #ff6b6b;
+				text-decoration: underline;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="presentation-container">
+			<div class="slide-counter">
+				<!-- <span id="current-slide">1</span> / <span id="total-slides">8</span> -->
+				<span id="current-slide">1</span> / <span id="total-slides">9</span>
+			</div>
+
+			<!-- Slide 1: Title -->
+			<div class="slide active">
+				<div class="github-logo">📚</div>
+				<h1>GitHub for Cybersecurity Beginners</h1>
+				<p>Your Professional Portfolio in the Digital World</p>
+				<p style="margin-top: 30px; font-size: 1.1rem; opacity: 0.8;">A Complete Guide to Getting Started</p>
+			</div>
+
+			<!-- Slide 2: What is GitHub? -->
+			<div class="slide">
+				<h2>What is GitHub?</h2>
+				<p style="font-size: 1.5rem; margin-bottom: 30px;">Think of it as <span class="highlight">Google Drive + Professional Portfolio</span> for your technical work</p>
+				<ul>
+					<li><strong>Cloud storage</strong> for your code, projects, and documents</li>
+					<li><strong>Version control</strong> - tracks every change you make over time</li>
+					<li><strong>Collaboration platform</strong> - work with others on projects</li>
+					<li><strong>Professional showcase</strong> - employers check your GitHub profile</li>
+					<li><strong>Learning hub</strong> - explore millions of open-source projects</li>
+				</ul>
+			</div>
+
+			<!-- Slide 3: Why GitHub Matters in Cybersecurity -->
+			<div class="slide">
+				<h2>Why GitHub Matters in Cybersecurity</h2>
+				<ul>
+						<li><strong>Industry Standard:</strong> Every security professional has a GitHub profile</li>
+						<li><strong>Show Don't Tell:</strong> Demonstrate your skills with actual projects</li>
+						<li><strong>Community Learning:</strong> Access security tools, scripts, and research</li>
+						<li><strong>Career Advancement:</strong> Recruiters search GitHub for talent</li>
+						<li><strong>Continuous Learning:</strong> Document your cybersecurity journey</li>
+						<li><strong>Professional Network:</strong> Connect with security experts worldwide</li>
+				</ul>
+				<p style="margin-top: 30px; font-size: 1.2rem;">🔑 <em>Your GitHub is your living resume in cybersecurity</em></p>
+			</div>
+
+			<!-- Slide 4: What to Add as a Beginner -->
+			<div class="slide">
+				<h2>What to Add as a Beginner</h2>
+				<div class="project-grid">
+					<div class="project-card">
+							<h4>📝 Course Documentation</h4>
+							<p>Organized notes from your cybersecurity studies and certifications</p>
+					</div>
+					<div class="project-card">
+							<h4>🧪 Lab Write-ups</h4>
+							<p>Document your hands-on cybersecurity labs and what you learned</p>
+					</div>
+					<div class="project-card">
+							<h4>🐍 Simple Scripts</h4>
+							<p>Basic Python scripts for security tasks, even if they're small</p>
+					</div>
+					<div class="project-card">
+							<h4>🏆 CTF Solutions</h4>
+							<p>Your approaches to Capture The Flag cybersecurity challenges</p>
+					</div>
+				</div>
+			</div>
+
+			<!-- Slide 5: Beginner Project Ideas -->
+			<div class="slide">
+				<h2>Beginner-Friendly Project Ideas</h2>
+				<div class="project-grid">
+					<div class="project-card">
+							<h4>🔐 Password Strength Checker</h4>
+							<p>Python script that evaluates password complexity</p>
+					</div>
+					<div class="project-card">
+							<h4>🔍 Basic Port Scanner</h4>
+							<p>Simple tool to check open ports (for your own networks)</p>
+					</div>
+					<div class="project-card">
+							<h4>📊 Log Analyzer</h4>
+							<p>Parse system logs and flag suspicious patterns</p>
+					</div>
+					<div class="project-card">
+							<h4>🛡️ Personal Security Guide</h4>
+							<p>Comprehensive checklist for securing devices and accounts</p>
+					</div>
+				</div>
+			</div>
+
+			<!-- Slide 6: Getting Started Steps -->
+			<div class="slide">
+				<h2>Getting Started: Step by Step</h2>
+				<div class="step-grid">
+					<div class="step-card">
+							<div class="step-number">1</div>
+							<div class="step-content">Create your free GitHub account at github.com</div>
+					</div>
+					<div class="step-card">
+							<div class="step-number">2</div>
+							<div class="step-content">Set up your profile with a professional photo and bio</div>
+					</div>
+					<div class="step-card">
+							<div class="step-number">3</div>
+							<div class="step-content">Create your first repository (start with course notes)</div>
+					</div>
+					<div class="step-card">
+							<div class="step-number">4</div>
+							<div class="step-content">Learn basic Git commands or use GitHub Desktop</div>
+					</div>
+					<div class="step-card">
+							<div class="step-number">5</div>
+							<div class="step-content">Upload your first project with a clear README file</div>
+					</div>
+					<div class="step-card">
+							<div class="step-number">6</div>
+							<div class="step-content">Commit regularly and document your learning journey</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Slide 7: Best Practices -->
+			<div class="slide">
+				<h2>GitHub Best Practices</h2>
+				<ul>
+					<li><strong>Write Clear README files:</strong> Explain what each project does and how to use it</li>
+					<li><strong>Organize Your Repositories:</strong> Use descriptive names and consistent structure</li>
+					<li><strong>Document Your Learning:</strong> Include comments explaining your thought process</li>
+					<li><strong>Commit Regularly:</strong> Small, frequent updates show consistent work</li>
+					<li><strong>Pin Your Best Work:</strong> Highlight your top repositories on your profile</li>
+					<li><strong>Never Upload Sensitive Data:</strong> Keep passwords, keys, and personal info out</li>
+				</ul>
+			</div>
+
+			<!-- Slide 8: Your GitHub Journey Starts Now -->
+			<div class="slide">
+				<h1>Your GitHub Journey Starts Now!</h1>
+				<p style="font-size: 1.4rem; margin-bottom: 30px;">Remember: <span class="highlight">Every expert was once a beginner</span></p>
+				<ul>
+					<li>Start small - even simple projects count</li>
+					<li>Be consistent - regular commits show dedication</li>
+					<li>Document everything - explain what you learned</li>
+					<li>Connect with others - follow cybersecurity professionals</li>
+					<li>Keep learning - GitHub grows with you</li>
+				</ul>
+				<p style="margin-top: 40px; font-size: 1.3rem;">🚀 <strong>Ready for hands-on resources and next steps?</strong></p>
+			</div>
+
+			<!-- Slide 9: Resources & Next Steps -->
+			<div class="slide">
+				<h2>Resources & Next Steps</h2>
+				<div class="resources-grid">
+				<div class="resource-section">
+					<h3>🎯 Beginner Projects to Try</h3>
+					<ul class="resource-links">
+						<li style="margin-bottom: 20px;"><a href="https://github.com/digininja/DVWA" target="_blank">DVWA</a> - Practice web security</li>
+						<li><a href="https://github.com/danielmiessler/SecLists" target="_blank">SecLists</a> - Security testing lists</li>
+						<li><a href="https://github.com/WebGoat/WebGoat" target="_blank">OWASP WebGoat</a> - Interactive security lessons</li>
+						<li><a href="https://github.com/juice-shop/juice-shop" target="_blank">OWASP Juice Shop</a> - Intentionally vulnerable web application</li>
+					</ul>
+				</div>
+				<div class="resource-section">
+					<h3>📚 Learn Git Commands</h3>
+					<ul class="resource-links">
+						<li><a href="https://git-scm.com/docs/gittutorial" target="_blank">Official Git Tutorial</a></li>
+						<li><a href="https://learngitbranching.js.org" target="_blank">Interactive Git Learning</a></li>
+						<li><a href="https://desktop.github.com" target="_blank">GitHub Desktop</a> - GUI alternative</li>
+					</ul>
+				</div>
+			</div>
+			<div class="resources-grid">
+				<div class="resource-section">
+						<h3>🏆 Practice Platforms</h3>
+						<ul class="resource-links">
+							<li><a href="https://tryhackme.com" target="_blank">TryHackMe</a> - Guided cybersecurity learning</li>
+							<li><a href="https://www.hackthebox.com" target="_blank">Hack The Box</a> - Pentesting practice</li>
+							<li><a href="https://picoctf.org" target="_blank">PicoCTF</a> - Beginner-friendly CTFs</li>
+							<li><a href="https://www.vulnhub.com" target="_blank">VulnHub</a> - Vulnerable VMs</li>
+						</ul>
+					</div>
+					<div class="resource-section">
+						<h3>👥 Communities to Join</h3>
+						<ul class="resource-links">
+							<li><a href="https://www.reddit.com/r/cybersecurity" target="_blank">r/cybersecurity</a> - Reddit community</li>
+							<li><a href="https://github.com/topics/cybersecurity" target="_blank">GitHub Cybersecurity</a> - Explore projects</li>
+							<li><a href="https://www.sans.org/community" target="_blank">SANS Community</a> - Professional network</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+
+			<div class="navigation">
+				<button class="nav-btn" id="prev-btn" onclick="changeSlide(-1)">← Previous</button>
+				<button class="nav-btn" id="next-btn" onclick="changeSlide(1)">Next →</button>
+			</div>
+		</div>
+
+		<script>
+			let currentSlide = 1;
+			const totalSlides = document.querySelectorAll('.slide').length;
+			
+			document.getElementById('total-slides').textContent = totalSlides;
+			
+			function showSlide(n) {
+				const slides = document.querySelectorAll('.slide');
+				
+				if (n > totalSlides) currentSlide = 1;
+				if (n < 1) currentSlide = totalSlides;
+				
+				slides.forEach(slide => slide.classList.remove('active'));
+				slides[currentSlide - 1].classList.add('active');
+				
+				document.getElementById('current-slide').textContent = currentSlide;
+				document.getElementById('prev-btn').disabled = currentSlide === 1;
+				document.getElementById('next-btn').disabled = currentSlide === totalSlides;
+			}
+			
+			function changeSlide(direction) {
+				currentSlide += direction;
+				showSlide(currentSlide);
+			}
+			
+			// Initialize
+			showSlide(currentSlide);
+			
+			// Keyboard navigation
+			document.addEventListener('keydown', function(e) {
+				if (e.key === 'ArrowLeft') changeSlide(-1);
+				if (e.key === 'ArrowRight') changeSlide(1);
+			});
+		</script>
+	</body>
+</html>
